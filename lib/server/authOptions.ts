@@ -1,12 +1,19 @@
 // src/app/api/auth/[...nextauth]/route.ts
-import NextAuth from "next-auth";
+import { type NextAuthOptions } from "next-auth";
+import { Account, Profile, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { userDB } from "@/lib/server/dbOperations";
 import bcrypt from "bcryptjs";
+import type { AdapterUser } from "next-auth/adapters";
 
-export const authOptions = {
+interface MyUser extends AdapterUser {
+	profession?: string;
+}
+
+export const authOptions: NextAuthOptions = {
 	providers: [
+		// Google OAuth
 		GoogleProvider({
 			clientId: process.env.GOOGLE_CLIENT_ID!,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
@@ -51,7 +58,7 @@ export const authOptions = {
 						email: user.email,
 						name: user.name,
 						profession: user.profession,
-					};
+					} as MyUser;
 				} catch (error) {
 					console.error("Auth error:", error);
 					return null;
@@ -91,8 +98,8 @@ export const authOptions = {
 		},
 		async jwt({ token, user, account }) {
 			if (user) {
-				token.id = user.id;
-				token.profession = user.profession;
+				token.id = (user as MyUser).id;
+				token.profession = (user as MyUser).profession;
 			}
 			return token;
 		},
@@ -111,7 +118,7 @@ export const authOptions = {
 	},
 	pages: {
 		signIn: "/login",
-		signUp: "/register",
+		newUser: "/register",
 	},
 	session: {
 		strategy: "jwt" as const,
@@ -119,7 +126,3 @@ export const authOptions = {
 	},
 	secret: process.env.NEXTAUTH_SECRET,
 };
-
-const handler = NextAuth(authOptions);
-
-export { handler as GET, handler as POST };

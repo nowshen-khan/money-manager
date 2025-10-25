@@ -70,7 +70,7 @@ export default function RegisterPage() {
 			}
 
 			router.push("/dashboard");
-		} catch {
+		} catch (err: unknown) {
 			setError(err.message);
 		} finally {
 			setLoading(false);

@@ -71,7 +71,11 @@ export default function RegisterPage() {
 
 			router.push("/dashboard");
 		} catch (err: unknown) {
-			setError(err.message);
+			if (err instanceof Error) {
+				setError(err.message);
+			} else {
+				setError(String(err)); // fallback
+			}
 		} finally {
 			setLoading(false);
 		}
@@ -94,7 +98,7 @@ export default function RegisterPage() {
 	};
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
+		<div className="min-h-screen bg-linear-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
 			<Card className="w-full max-w-md">
 				<CardHeader className="text-center">
 					<div className="flex justify-center mb-4">

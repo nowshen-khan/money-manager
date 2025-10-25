@@ -58,7 +58,7 @@ export async function POST(request: Request) {
 	} catch (error: unknown) {
 		console.error("Registration error:", error);
 
-		if (error.message.includes("already exists")) {
+		if (error instanceof Error && error.message.includes("already exists")) {
 			return NextResponse.json({ error: error.message }, { status: 409 });
 		}
 

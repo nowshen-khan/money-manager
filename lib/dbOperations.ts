@@ -74,33 +74,88 @@ export const userOperations = {
 export const incomeOperations = {
 	async addIncome(userId: string, incomeData: IIncomeSource) {
 		await connectDB();
-		return await User.findByIdAndUpdate(
+		const result = await User.findByIdAndUpdate(
 			userId,
 			{ $push: { incomeSources: incomeData } },
-			{ new: true }
+			{ new: true, runValidators: true }
 		);
+
+		if (!result) {
+			throw new Error("User not found");
+		}
+		return result;
 	},
 
 	async getUserIncomes(userId: string) {
 		await connectDB();
 		const user = await User.findById(userId);
+
+		if (!user) {
+			throw new Error("User not found");
+		}
 		return user?.incomeSources || [];
+	},
+
+	async getMonthlyIncomes(userId: string, year: number, month: number) {
+		await connectDB();
+		const user = await User.findById(userId);
+		if (!user) return 0;
+
+		const monthlyIncomes = user.incomeSources.filter(
+			(income: IIncomeSource) => {
+				const incomeDate = new Date(income.date);
+				return (
+					incomeDate.getFullYear() === year && incomeDate.getMonth() === month
+				);
+			}
+		);
+
+		return monthlyIncomes.reduce(
+			(total: number, income: IIncomeSource) => total + income.amount,
+			0
+		);
 	},
 };
 
 export const expenseOperations = {
 	async addExpense(userId: string, expenseData: IExpense) {
 		await connectDB();
-		return await User.findByIdAndUpdate(
+		const result = await User.findByIdAndUpdate(
 			userId,
 			{ $push: { expenses: expenseData } },
-			{ new: true }
+			{ new: true, runValidators: true }
 		);
+
+		if (!result) {
+			throw new Error("User not found");
+		}
+		return result;
 	},
 
 	async getUserExpenses(userId: string) {
 		await connectDB();
 		const user = await User.findById(userId);
+		if (!user) {
+			throw new Error("User not found");
+		}
 		return user?.expenses || [];
+	},
+
+	async getMonthlyExpenses(userId: string, year: number, month: number) {
+		await connectDB();
+		const user = await User.findById(userId);
+		if (!user) return 0;
+
+		const monthlyExpenses = user.expenses.filter((expense: IExpense) => {
+			const expenseDate = new Date(expense.date);
+			return (
+				expenseDate.getFullYear() === year && expenseDate.getMonth() === month
+			);
+		});
+
+		return monthlyExpenses.reduce(
+			(total: number, expense: IExpense) => total + expense.amount,
+			0
+		);
 	},
 };

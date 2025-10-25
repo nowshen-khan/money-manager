@@ -1,8 +1,8 @@
 // src/app/api/dashboard/stats/route.ts
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/server/auth-config";
-import { expenseDB, incomeDB } from "@/lib/server/dbOperations";
+import { authOptions } from "@/lib/auth-config";
+import { expenseDB, incomeDB } from "@/lib/dbOperations";
 
 export async function GET() {
 	try {

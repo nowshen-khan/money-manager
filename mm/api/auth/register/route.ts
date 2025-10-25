@@ -1,6 +1,6 @@
 // src/app/api/auth/register/route.ts
 import { NextResponse } from "next/server";
-import { userDB } from "@/lib/server/dbOperations";
+import { userDB } from "@/lib/dbOperations";
 
 export async function POST(request: Request) {
 	try {

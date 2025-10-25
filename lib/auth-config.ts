@@ -1,7 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { userOperations } from "@/lib/server/dbOperations";
+import { userOperations } from "@/lib/dbOperations";
 
 export const authOptions: NextAuthOptions = {
 	providers: [
@@ -61,21 +61,21 @@ export const authOptions: NextAuthOptions = {
 			// Handle Google OAuth sign-in
 			if (account?.provider === "google") {
 				try {
-					const existingUser = await userOperations.findUserByEmail(
-						user.email!
-					);
+					let existingUser = await userOperations.findUserByEmail(user.email!);
 
 					if (!existingUser) {
 						// Create new user with Google OAuth
-						await userOperations.createUser({
+						existingUser = await userOperations.createUser({
 							email: user.email!,
 							name: user.name!,
+							image: user.image,
 							// No password for OAuth users
 							profession: "other",
 							maritalStatus: "single",
 							familyMembers: 1,
 						});
 					}
+					user.id = existingUser._id.toString();
 					return true;
 				} catch (error) {
 					console.error("Google OAuth error:", error);

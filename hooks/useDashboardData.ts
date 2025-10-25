@@ -1,11 +1,14 @@
-// src/hooks/useDashboardData.ts
+"use client";
+
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 interface DashboardStats {
 	income: number;
 	expenses: number;
 	balance: number;
 	savings: number;
+	savingsRate: number;
 }
 
 interface Expense {
@@ -17,11 +20,13 @@ interface Expense {
 }
 
 export function useDashboardData() {
+	const { data: session } = useSession();
 	const [stats, setStats] = useState<DashboardStats>({
 		income: 0,
 		expenses: 0,
 		balance: 0,
 		savings: 0,
+		savingsRate: 0,
 	});
 	const [recentExpenses, setRecentExpenses] = useState<Expense[]>([]);
 	const [loading, setLoading] = useState(true);
@@ -29,37 +34,34 @@ export function useDashboardData() {
 
 	useEffect(() => {
 		async function loadDashboardData() {
+			if (!session?.user?.id) return;
+
 			try {
 				setLoading(true);
 				setError(null);
 
-				// Fetch stats and expenses in parallel
-				const [statsResponse, expensesResponse] = await Promise.all([
-					fetch("/api/dashboard/stats"),
-					fetch("/api/dashboard/expenses"),
-				]);
+				const response = await fetch("/api/dashboard", {
+					credentials: "include",
+				});
 
-				if (!statsResponse.ok || !expensesResponse.ok) {
+				if (!response.ok) {
 					throw new Error("Failed to fetch dashboard data");
 				}
 
-				const [statsData, expensesData] = await Promise.all([
-					statsResponse.json(),
-					expensesResponse.json(),
-				]);
+				const data = await response.json();
 
-				setStats(statsData);
-				setRecentExpenses(expensesData);
-			} catch (err) {
+				setStats(data.stats);
+				setRecentExpenses(data.recentExpenses);
+			} catch (err: any) {
 				console.error("Error loading dashboard data:", err);
-				setError("Failed to load dashboard data");
+				setError(err.message || "Failed to load dashboard data");
 			} finally {
 				setLoading(false);
 			}
 		}
 
 		loadDashboardData();
-	}, []);
+	}, [session]);
 
 	return { stats, recentExpenses, loading, error };
 }

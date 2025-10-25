@@ -3,7 +3,7 @@ import { type NextAuthOptions } from "next-auth";
 import { Account, Profile, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { userDB } from "@/lib/server/dbOperations";
+import { userDB } from "@/lib/dbOperations";
 import bcrypt from "bcryptjs";
 import type { AdapterUser } from "next-auth/adapters";
 

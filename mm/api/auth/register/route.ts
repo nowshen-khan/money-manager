@@ -1,5 +1,6 @@
+// src/app/api/auth/register/route.ts
 import { NextResponse } from "next/server";
-import { userOperations } from "@/lib/server/dbOperations";
+import { userDB } from "@/lib/server/dbOperations";
 
 export async function POST(request: Request) {
 	try {
@@ -15,10 +16,10 @@ export async function POST(request: Request) {
 			familyMembers,
 		} = body;
 
-		// Validation
-		if (!email || !password || !name) {
+		// Basic validation
+		if (!email || !password || !name || !profession || !maritalStatus) {
 			return NextResponse.json(
-				{ error: "Email, password, and name are required" },
+				{ error: "Missing required fields" },
 				{ status: 400 }
 			);
 		}
@@ -31,7 +32,7 @@ export async function POST(request: Request) {
 		}
 
 		// Create user
-		const user = await userOperations.createUser({
+		const user = await userDB.createUser({
 			email,
 			password,
 			name,
@@ -46,7 +47,7 @@ export async function POST(request: Request) {
 			{
 				message: "User created successfully",
 				user: {
-					id: user._id.toString(),
+					id: user._id,
 					email: user.email,
 					name: user.name,
 					profession: user.profession,
@@ -54,14 +55,11 @@ export async function POST(request: Request) {
 			},
 			{ status: 201 }
 		);
-	} catch (error: any) {
+	} catch (error: unknown) {
 		console.error("Registration error:", error);
 
-		if (error.message.includes("already exists")) {
-			return NextResponse.json(
-				{ error: "User already exists with this email" },
-				{ status: 409 }
-			);
+		if (error instanceof Error && error.message.includes("already exists")) {
+			return NextResponse.json({ error: error.message }, { status: 409 });
 		}
 
 		return NextResponse.json(

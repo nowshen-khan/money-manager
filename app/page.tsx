@@ -3,9 +3,9 @@ import Link from "next/link";
 
 export default function Home() {
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 dark:from-gray-900 dark:to-gray-800">
+		<div className="min-h-screen bg-linear-to-br from-blue-50 to-green-50 dark:from-gray-900 dark:to-gray-800">
 			{/* Navigation */}
-			<nav className="border-b bg-background/80 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60">
+			<nav className="border-b bg-background/80 backdrop-blur-sm supports-backdrop-filter:bg-background/60">
 				<div className="container flex h-16 items-center justify-between px-4">
 					<div className="flex items-center gap-2">
 						<div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500">
@@ -25,12 +25,11 @@ export default function Home() {
 					</div>
 				</div>
 			</nav>
-
 			{/* Hero Section */}
 			<section className="container flex flex-col items-center px-4 py-16 text-center">
 				<h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
 					Smart Money Management
-					<span className="block bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+					<span className="block bg-linear-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
 						for Bangladeshi Users
 					</span>
 				</h1>
@@ -50,7 +49,6 @@ export default function Home() {
 					</Button>
 				</div>
 			</section>
-
 			{/* Features Grid */}
 			<section className="container px-4 py-16">
 				<div className="grid gap-8 md:grid-cols-3">

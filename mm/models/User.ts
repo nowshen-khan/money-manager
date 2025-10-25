@@ -1,3 +1,4 @@
+// src/models/User.ts
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IIncomeSource {
@@ -38,9 +39,7 @@ export interface IUserCategory {
 export interface IUser extends Document {
 	email: string;
 	name?: string;
-	password?: string;
-	image?: string;
-	emailVerified?: Date;
+	password: string;
 
 	// Personal Information
 	age?: number;
@@ -107,16 +106,14 @@ const UserSchema = new Schema(
 	{
 		email: { type: String, required: true, unique: true },
 		name: String,
-		password: String,
-		image: String,
-		emailVerified: Date,
+		password: { type: String, required: true },
 
 		// Personal Information
 		age: Number,
-		profession: { type: String, required: true, default: "other" },
+		profession: { type: String, required: true },
 		professionType: String,
 		experience: Number,
-		maritalStatus: { type: String, required: true, default: "single" },
+		maritalStatus: { type: String, required: true },
 		familyMembers: { type: Number, default: 1 },
 		isPrimaryEarner: { type: Boolean, default: true },
 		otherEarners: { type: Number, default: 0 },
@@ -139,6 +136,7 @@ const UserSchema = new Schema(
 
 // Only create indexes on server-side
 if (typeof window === "undefined") {
+	UserSchema.index({ email: 1 });
 	UserSchema.index({ "expenses.date": -1 });
 	UserSchema.index({ "incomeSources.date": -1 });
 }

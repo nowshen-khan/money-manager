@@ -1,3 +1,4 @@
+// src/app/register/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -44,7 +45,6 @@ export default function RegisterPage() {
 		setError("");
 
 		try {
-			// Register user
 			const response = await fetch("/api/auth/register", {
 				method: "POST",
 				headers: {
@@ -59,7 +59,6 @@ export default function RegisterPage() {
 				throw new Error(data.error || "Registration failed");
 			}
 
-			// Sign in the user after successful registration
 			const result = await signIn("credentials", {
 				email: formData.email,
 				password: formData.password,
@@ -70,10 +69,13 @@ export default function RegisterPage() {
 				throw new Error("Registration successful but login failed");
 			}
 
-			// Redirect to dashboard
 			router.push("/dashboard");
-		} catch (err: any) {
-			setError(err.message);
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				setError(err.message);
+			} else {
+				setError(String(err)); // fallback
+			}
 		} finally {
 			setLoading(false);
 		}
@@ -85,7 +87,7 @@ export default function RegisterPage() {
 
 		try {
 			await signIn("google", { callbackUrl: "/dashboard" });
-		} catch (err: any) {
+		} catch {
 			setError("Failed to sign in with Google");
 			setLoading(false);
 		}
@@ -96,7 +98,7 @@ export default function RegisterPage() {
 	};
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 to-green-50 dark:from-gray-900 dark:to-gray-800 p-4">
+		<div className="min-h-screen bg-linear-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
 			<Card className="w-full max-w-md">
 				<CardHeader className="text-center">
 					<div className="flex justify-center mb-4">
@@ -157,6 +159,7 @@ export default function RegisterPage() {
 					</div>
 
 					<form onSubmit={handleSubmit} className="space-y-4">
+						{/* Form fields remain the same */}
 						<div className="space-y-2">
 							<Label htmlFor="name">Full Name</Label>
 							<Input
@@ -194,6 +197,7 @@ export default function RegisterPage() {
 							/>
 						</div>
 
+						{/* Rest of the form remains the same */}
 						<div className="space-y-2">
 							<Label htmlFor="profession">Profession</Label>
 							<Select
@@ -293,7 +297,7 @@ export default function RegisterPage() {
 						<div className="text-center text-sm">
 							Already have an account?{" "}
 							<Link href="/login" className="text-green-600 hover:underline">
-								Log in
+								Sign in
 							</Link>
 						</div>
 					</form>

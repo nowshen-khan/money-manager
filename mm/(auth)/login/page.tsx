@@ -1,3 +1,4 @@
+// src/app/login/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -16,9 +17,11 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Link from "next/link";
 
-export default function SignInPage() {
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+export default function LoginPage() {
+	const [formData, setFormData] = useState({
+		email: "",
+		password: "",
+	});
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 	const router = useRouter();
@@ -30,8 +33,8 @@ export default function SignInPage() {
 
 		try {
 			const result = await signIn("credentials", {
-				email,
-				password,
+				email: formData.email,
+				password: formData.password,
 				redirect: false,
 			});
 
@@ -40,7 +43,7 @@ export default function SignInPage() {
 			} else {
 				router.push("/dashboard");
 			}
-		} catch (err: any) {
+		} catch {
 			setError("An error occurred. Please try again.");
 		} finally {
 			setLoading(false);
@@ -53,14 +56,14 @@ export default function SignInPage() {
 
 		try {
 			await signIn("google", { callbackUrl: "/dashboard" });
-		} catch (err: any) {
+		} catch {
 			setError("Failed to sign in with Google");
 			setLoading(false);
 		}
 	};
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 to-green-50 dark:from-gray-900 dark:to-gray-800 p-4">
+		<div className="min-h-screen bg-linear-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
 			<Card className="w-full max-w-md">
 				<CardHeader className="text-center">
 					<div className="flex justify-center mb-4">
@@ -127,8 +130,10 @@ export default function SignInPage() {
 								id="email"
 								type="email"
 								placeholder="Enter your email"
-								value={email}
-								onChange={(e) => setEmail(e.target.value)}
+								value={formData.email}
+								onChange={(e) =>
+									setFormData((prev) => ({ ...prev, email: e.target.value }))
+								}
 								required
 							/>
 						</div>
@@ -139,8 +144,10 @@ export default function SignInPage() {
 								id="password"
 								type="password"
 								placeholder="Enter your password"
-								value={password}
-								onChange={(e) => setPassword(e.target.value)}
+								value={formData.password}
+								onChange={(e) =>
+									setFormData((prev) => ({ ...prev, password: e.target.value }))
+								}
 								required
 							/>
 						</div>
@@ -150,11 +157,11 @@ export default function SignInPage() {
 							className="w-full bg-green-600 hover:bg-green-700"
 							disabled={loading}
 						>
-							{loading ? "Logging in..." : "Log In"}
+							{loading ? "Signing in..." : "Sign In"}
 						</Button>
 
 						<div className="text-center text-sm">
-							Don't have an account?{" "}
+							Don&#39;t have an account?{" "}
 							<Link href="/register" className="text-green-600 hover:underline">
 								Create account
 							</Link>

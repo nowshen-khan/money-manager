@@ -1,14 +1,22 @@
-// src/app/layout.tsx
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-import SessionProvider from "@/components/providers/SessionProvider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { SessionProvider } from "@/components/providers/SessionProvider";
+import { Inter } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
+const InterFont = Inter({
+	subsets: ["latin"],
+	variable: "--font-sans",
+	display: "swap",
+});
 
 export const metadata: Metadata = {
-	title: "Money Manager - Smart Finance Assistant",
+	title: {
+		default: "Money Manager - Smart Finance",
+		template: "%s | Money Manager",
+	},
 	description: "AI-powered money management for Bangladeshi users",
+	keywords: ["finance", "money", "budget", "expense tracker", "Bangladesh"],
 };
 
 export default function RootLayout({
@@ -17,11 +25,11 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html lang="en">
-			<body className={inter.className}>
-				<SessionProvider>
-					<main className="min-h-screen bg-background">{children}</main>
-				</SessionProvider>
+		<html lang="en" suppressHydrationWarning>
+			<body className="font-sans antialiased">
+				<ThemeProvider>
+					<SessionProvider>{children}</SessionProvider>
+				</ThemeProvider>
 			</body>
 		</html>
 	);

@@ -15,7 +15,9 @@ const Navbar = () => {
 					</div>
 					<div className="flex space-x-4">
 						<Link href="/login">
-							<Button variant="outline">Login</Button>
+							<Button variant="outline" className="text-gray-800">
+								Login
+							</Button>
 						</Link>
 						<Link href="/register">
 							<Button className="bg-green-600 hover:bg-green-700">

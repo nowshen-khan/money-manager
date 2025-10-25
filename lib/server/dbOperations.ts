@@ -29,7 +29,7 @@ const defaultCategories: IUserCategory[] = [
 
 // User Operations
 export const userDB = {
-	async createUser(userData: any) {
+	async createUser(userData: Partial<IUser>) {
 		await connectDB();
 
 		// Check if user already exists
@@ -150,11 +150,14 @@ export const expenseDB = {
 		const user = await User.findById(userId);
 		if (!user) return {};
 
-		const categoryTotals = user.expenses.reduce((acc: any, expense) => {
-			const category = expense.category;
-			acc[category] = (acc[category] || 0) + expense.amount;
-			return acc;
-		}, {});
+		const categoryTotals = user.expenses.reduce(
+			(acc: Record<string, number>, expense) => {
+				const category = expense.category;
+				acc[category] = (acc[category] || 0) + expense.amount;
+				return acc;
+			},
+			{}
+		);
 
 		return categoryTotals;
 	},

@@ -60,7 +60,7 @@ export default function DashboardPage() {
 					Welcome back, {session?.user?.name}! 👋
 				</h1>
 				<p className="text-gray-600">
-					Here's your financial overview for this month
+					Here&#39;s your financial overview for this month
 				</p>
 			</div>
 
@@ -236,7 +236,7 @@ export default function DashboardPage() {
 								<div>
 									<p className="font-medium">Expenses Exceed Income</p>
 									<p className="text-sm text-gray-600">
-										You're spending more than you earn. Consider reducing
+										You&#39;re spending more than you earn. Consider reducing
 										non-essential expenses.
 									</p>
 								</div>
@@ -262,8 +262,8 @@ export default function DashboardPage() {
 								<div>
 									<p className="font-medium">Great Job!</p>
 									<p className="text-sm text-gray-600">
-										You're managing your finances well. Consider investing your
-										savings.
+										You&#39;re managing your finances well. Consider investing
+										your savings.
 									</p>
 								</div>
 							</div>

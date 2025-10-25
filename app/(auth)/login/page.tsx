@@ -43,7 +43,7 @@ export default function LoginPage() {
 			} else {
 				router.push("/dashboard");
 			}
-		} catch (err: any) {
+		} catch {
 			setError("An error occurred. Please try again.");
 		} finally {
 			setLoading(false);
@@ -56,14 +56,14 @@ export default function LoginPage() {
 
 		try {
 			await signIn("google", { callbackUrl: "/dashboard" });
-		} catch (err: any) {
+		} catch {
 			setError("Failed to sign in with Google");
 			setLoading(false);
 		}
 	};
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
+		<div className="min-h-screen bg-linear-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
 			<Card className="w-full max-w-md">
 				<CardHeader className="text-center">
 					<div className="flex justify-center mb-4">

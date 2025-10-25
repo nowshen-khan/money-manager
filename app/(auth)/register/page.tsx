@@ -70,7 +70,7 @@ export default function RegisterPage() {
 			}
 
 			router.push("/dashboard");
-		} catch (err: any) {
+		} catch {
 			setError(err.message);
 		} finally {
 			setLoading(false);
@@ -83,7 +83,7 @@ export default function RegisterPage() {
 
 		try {
 			await signIn("google", { callbackUrl: "/dashboard" });
-		} catch (err: any) {
+		} catch {
 			setError("Failed to sign in with Google");
 			setLoading(false);
 		}

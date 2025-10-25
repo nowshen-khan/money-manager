@@ -22,7 +22,7 @@ export async function GET() {
 			message: "MongoDB connection test completed",
 			timestamp: new Date().toISOString(),
 		});
-	} catch (error: any) {
+	} catch {
 		return NextResponse.json(
 			{
 				success: false,

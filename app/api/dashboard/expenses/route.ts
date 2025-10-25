@@ -1,7 +1,7 @@
 // src/app/api/dashboard/expenses/route.ts
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "@/lib/server/authOptions";
 import { expenseDB } from "@/lib/server/dbOperations";
 
 export async function GET() {
@@ -14,10 +14,7 @@ export async function GET() {
 
 		const expenses = await expenseDB.getUserExpenses(session.user.id);
 		const sortedExpenses = expenses
-			.sort(
-				(a: any, b: any) =>
-					new Date(b.date).getTime() - new Date(a.date).getTime()
-			)
+			.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 			.slice(0, 3);
 
 		return NextResponse.json(sortedExpenses);

@@ -55,7 +55,7 @@ export async function POST(request: Request) {
 			},
 			{ status: 201 }
 		);
-	} catch (error: any) {
+	} catch (error: unknown) {
 		console.error("Registration error:", error);
 
 		if (error.message.includes("already exists")) {
